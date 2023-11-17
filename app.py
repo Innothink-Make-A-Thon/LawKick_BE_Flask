@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import os
 from PIL import Image
 from pytesseract import *
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/api/ocr', methods=['POST'])
@@ -21,8 +22,7 @@ def ocr():
     print(result, '===============', type(result))
     # 임시 파일 삭제
     os.remove(temp_path)
-    # 결과를 JSON 형태로 반환
-    return jsonify({'output_data': result})
+    return result
 
 
 if __name__ == '__main__':
