@@ -46,11 +46,13 @@ def kickboard(imageUrl):
 
 @app.route('/api/ocr', methods=['POST'])
 def ocr():
+    app.logger.info('Hello, logging!')
     imageUrl = request.json['imageUrl'][0]  # JSON 데이터에서 ImageUrl 가져옴
     url_suffix = "amazonaws.com/"
     image_path = imageUrl.split(url_suffix, 1)[1]
     result = kickboard(image_path)
     print(result)
+    app.logger.info(result)
     if result == None:
         return 'R2W79C'
     return result
