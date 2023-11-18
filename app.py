@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 import logging
 
 from flask import Flask, request
@@ -5,13 +7,21 @@ import boto3
 import re
 from flask_cors import CORS
 
+load_dotenv()  # .env 파일 로드
+
 app = Flask(__name__)
 CORS(app)
 
 app.logger.setLevel(logging.DEBUG)
+
+# .env 파일에서 환경 변수 읽어오기
+rekognition_access_key = os.getenv('REKOGNITION_ACCESS_KEY')
+rekognition_secret_key = os.getenv('REKOGNITION_SECRET_KEY')
+
 def detect_text(photo, bucket):
-    session = boto3.Session(profile_name='default')
+    session = boto3.Session(aws_access_key_id=rekognition_access_key, aws_secret_access_key=rekognition_secret_key)
     client = session.client('rekognition')
+
 
     response = client.detect_text(Image={'S3Object': {'Bucket': bucket, 'Name': photo}})
 
@@ -54,7 +64,9 @@ def ocr():
     print(result)
     app.logger.info(result)
     if result == None:
+        print("=======실패=====")
         return 'R2W79C'
+    print("=======성공=====")
     return result
 
 
