@@ -23,7 +23,7 @@ def detect_text(photo, bucket):
         detected_text = text['DetectedText']
         confidence = text['Confidence']
 
-        if confidence >= 99:
+        if confidence >= 99.5:
             # 정규표현식으로 영어 대문자와 숫자로 이루어진 6글자인지 확인
             match = re.match(r'^[A-Z0-9]{6}$', detected_text)
             if match:
