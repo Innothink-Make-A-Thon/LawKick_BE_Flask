@@ -1,5 +1,3 @@
-import os
-from dotenv import load_dotenv
 import logging
 
 from flask import Flask, request
@@ -7,21 +5,13 @@ import boto3
 import re
 from flask_cors import CORS
 
-load_dotenv()  # .env 파일 로드
-
 app = Flask(__name__)
 CORS(app)
 
 app.logger.setLevel(logging.DEBUG)
-
-# .env 파일에서 환경 변수 읽어오기
-rekognition_access_key = os.getenv('REKOGNITION_ACCESS_KEY')
-rekognition_secret_key = os.getenv('REKOGNITION_SECRET_KEY')
-
 def detect_text(photo, bucket):
-    session = boto3.Session(aws_access_key_id=rekognition_access_key, aws_secret_access_key=rekognition_secret_key)
+    session = boto3.Session(profile_name='default')
     client = session.client('rekognition')
-
 
     response = client.detect_text(Image={'S3Object': {'Bucket': bucket, 'Name': photo}})
 
@@ -33,7 +23,7 @@ def detect_text(photo, bucket):
         detected_text = text['DetectedText']
         confidence = text['Confidence']
 
-        if confidence >= 90:
+        if confidence >= 99:
             # 정규표현식으로 영어 대문자와 숫자로 이루어진 6글자인지 확인
             match = re.match(r'^[A-Z0-9]{6}$', detected_text)
             if match:
