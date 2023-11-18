@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, request
 import boto3
 import re
@@ -6,6 +8,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+app.logger.setLevel(logging.DEBUG)
 def detect_text(photo, bucket):
     session = boto3.Session(profile_name='default')
     client = session.client('rekognition')
