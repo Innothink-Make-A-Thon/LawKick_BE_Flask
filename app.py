@@ -23,7 +23,7 @@ def detect_text(photo, bucket):
         detected_text = text['DetectedText']
         confidence = text['Confidence']
 
-        if confidence >= 99.5:
+        if confidence >= 95:
             # 정규표현식으로 영어 대문자와 숫자로 이루어진 6글자인지 확인
             match = re.match(r'^[A-Z0-9]{6}$', detected_text)
             if match:
@@ -55,7 +55,7 @@ def ocr():
     app.logger.info(result)
     if result == None:
         print("=======실패=====")
-        return 'R2W79C'
+        return '인식불가'
     print("=======성공=====")
     return result
 
